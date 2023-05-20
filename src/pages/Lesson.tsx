@@ -10,6 +10,7 @@ import {
     ListItem,
     useToast,
     Button,
+    Stack,
   } from '@chakra-ui/react';
 import { FiCheck, FiCheckCircle } from 'react-icons/fi';
 import Header from '../components/Header';
@@ -144,36 +145,37 @@ export default function Lesson(){
                 </Button>
                
                </Flex>
-                <Flex
-                
+                <Stack
+                    spacing={"4"}
                     justify={'center'}
                     align={'center'}
                   
                     w={'100%'}
                     >
                     
-                    <Box rounded={'2xl'}
-                        boxShadow={'2xl'}
-                        
-                        width={'100%'}
-                        >
-                      
+                    
                         {lesson?.videolessons && lesson?.videolessons?.map(videoL=>(
+                            <Box rounded={'2xl'}
+                            boxShadow={'2xl'}
+                            maxW="100%"
+                            width={'100%'}
+                            >
                             <video
                             controls
                             width={'100%'}
                             height={'100%'}
                             
-                            style={{maxHeight:"600px"}}
+                            style={{height:"500px",maxWidth:"100%",objectFit:"contain"}}
 
                             key={videoL.id}
                             >          
 
                                 <source src={videoL.url} type="video/mp4"/>
                             </video>
+                            </Box>
                         ))}
-                    </Box>
-                </Flex>
+                    
+                </Stack>
                 <Heading w="100%" textAlign={"center"} mt="8" mb="4" >
                 Description
                </Heading>
@@ -191,15 +193,17 @@ export default function Lesson(){
 
                     {!!lesson?.textLessons && lesson?.textLessons.map(textL=>(
                         <Box key={textL.id}>
-                        <Text textAlign={"justify"} ><strong>{textL.title}</strong></Text>
-                         <Text textAlign={"justify"} >{textL.content}</Text>
+                        <Text textAlign={"justify"} fontSize={"xl"} ><strong>{textL.title}</strong></Text>
+                         <Text dangerouslySetInnerHTML={{__html: textL.content}} textAlign={"justify"} >
+                                
+                         </Text>
                         </Box>
            
                     ))}
 
                 </SimpleGrid>
                 
-                <SimpleGrid columns={1} spacing="2">
+                <SimpleGrid alignItems={"top"} columns={1} spacing="2">
                      <Text py="0"  fontSize={"3xl"} >Links</Text>
                      {
                             lesson?.resourceLessons && lesson?.resourceLessons.length == 0 &&   <Text textAlign={"justify"} >this lesson does not have links</Text>
