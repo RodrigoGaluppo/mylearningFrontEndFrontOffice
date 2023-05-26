@@ -69,7 +69,7 @@ export default function Header() {
           
           <HStack spacing={8} alignItems={'center'}>
             <Box w="100%" >
-                  <LinkRoute to="/" >
+                  <LinkRoute to={!!user ? "/dashboard" : "/"} >
                   <Image w="100%" maxH={"80px"} objectFit={"contain"} src={useColorModeValue('../img/logo-white.svg', '../img/logo-dark.svg')}/>
                   </LinkRoute>
             </Box>
@@ -109,7 +109,7 @@ export default function Header() {
                 minW={0}>
                 <Avatar
                   size={'sm'}
-                  name={`${user.firstName}`}
+                  name={`${user.username}`}
                 />
               </MenuButton>
               <MenuList>

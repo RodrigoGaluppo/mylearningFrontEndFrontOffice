@@ -176,6 +176,25 @@ import api from '../services/apiClient';
       })
     },[])
 
+    useEffect(()=>{ 
+
+      let search = String(searchParams.get("search"))
+      
+      if(typeof(search) == typeof("")){
+        setSearchParams({
+            page: "1",
+            
+            search
+         })
+    }
+    else{
+        
+         setSearchParams({
+            page: "1"
+         })
+    }
+    },[])
+
     useEffect(()=>{
        
       setIsLoading(true) 
@@ -188,6 +207,7 @@ import api from '../services/apiClient';
          
           setQuestions(res?.data?.questions)
           setMaxPage(res?.data?.count)
+         
           setIsLoading(false)
       }).catch(err=>{
           console.log(err);
@@ -204,7 +224,7 @@ import api from '../services/apiClient';
       
      
 
-      if(page  == maxPage)
+      if(page >= maxPage)
         {
           toast({
             title: 'Can not go to next page',

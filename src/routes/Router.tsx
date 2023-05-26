@@ -10,7 +10,7 @@ import DashBoard from "../pages/DashBoard";
 import Lesson from "../pages/Lesson";
 import Login from "../pages/Login";
 import ErrorPage from "../pages/PageError";
-import SignUp from "../pages/SignUp";
+
 import { useAuth } from "../hooks/AuthContext";
 import PrivateRouteComponent from "./PrivateRoute";
 import Profile from "../pages/Profile";
@@ -32,7 +32,7 @@ const Router:React.FC = ()=>{
             <Routes>
               
                 <Route element={<Login/>} path="/" />
-                <Route element={<SignUp/>} path="/signup" />
+      
                 <Route element={<Courses/>} path="/courses" ></Route>
                 <Route element={<CourseInfo/>} path="/courseInfo/:id" ></Route>
                 <Route element={ <PrivateRouteComponent component={DashBoard} />} path="/dashboard" />

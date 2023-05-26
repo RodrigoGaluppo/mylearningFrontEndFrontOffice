@@ -48,6 +48,25 @@ export default function Courses(){
 
     const [isLoading,setIsLoading] = useState(false)
 
+    useEffect(()=>{ 
+
+        let search = String(searchParams.get("search"))
+        
+        if(typeof(search) == typeof("")){
+          setSearchParams({
+              page: "1",
+              
+              search
+           })
+      }
+      else{
+          
+           setSearchParams({
+              page: "1"
+           })
+      }
+      },[])
+
     useEffect(()=>{
 
        

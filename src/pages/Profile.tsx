@@ -108,7 +108,6 @@ export default function Profile(){
         api.put("/",{
             firstName:user?.firstName,
             lastName:user?.lastName,
-            email:user?.email,
             username:user?.username,
             gender:user?.gender,
             birthDate:user?.birthDate
@@ -124,7 +123,8 @@ export default function Profile(){
                 duration: 9000,
                 isClosable: true, position:"top-left"
               })
-              updateUser(res.data)
+              
+            updateUser(res.data)
             setIsLoading(false)
         }).catch(err=>{
             toast({
@@ -219,6 +219,27 @@ export default function Profile(){
                         }}
                         
                         />
+                        <FormControl mt="4" >
+                        <FormLabel>E-mail</FormLabel>
+                        <Input
+                        disabled
+                        onChange={(e)=>{
+                            setUser({firstName:user?.firstName, lastName:user?.lastName, email:e.target.value, birthDate: user?.birthDate , gender:user?.gender, username:user?.username})
+                        }}
+                        placeholder="firstname@lastname.io"
+                        bg={'gray.100'}
+                        defaultValue={user?.email}
+                        border={0}
+                        type='email'
+                        color={'gray.900'}
+                        _placeholder={{
+                            color: 'gray.500',
+                        }}
+
+                        />
+
+                        <FormHelperText></FormHelperText>
+                        </FormControl>
                         <FormHelperText></FormHelperText>
                         </FormControl>
                         <FormControl isRequired>
@@ -283,26 +304,7 @@ export default function Profile(){
                         </Select>
                         <FormHelperText></FormHelperText>
                         </FormControl>
-                        <FormControl isRequired>
-                        <FormLabel>E-mail</FormLabel>
-                        <Input
-                        onChange={(e)=>{
-                            setUser({firstName:user?.firstName, lastName:user?.lastName, email:e.target.value, birthDate: user?.birthDate , gender:user?.gender, username:user?.username})
-                        }}
-                        placeholder="firstname@lastname.io"
-                        bg={'gray.100'}
-                        defaultValue={user?.email}
-                        border={0}
-                        type='email'
-                        color={'gray.900'}
-                        _placeholder={{
-                            color: 'gray.500',
-                        }}
-
-                        />
-
-<FormHelperText></FormHelperText>
-                        </FormControl>
+                     
 
                     <Input
                     fontFamily={'heading'}

@@ -3,8 +3,9 @@ import api from "../services/apiClient"
 
 interface Iuser{
     id:string
-    email:string,
+    email:string
     firstName:string
+    username:string
 }
 
 interface IAuthContext{
@@ -69,6 +70,7 @@ export const AuthProvider:React.FC<{children:React.ReactNode}> = ({children})=>{
     const updateUser = useCallback((Newuser:Iuser)=>{
 
         localStorage.setItem("@LearnMe:customer",JSON.stringify(data.user))
+      
         
         setData({user:Newuser,token:data.token})
         

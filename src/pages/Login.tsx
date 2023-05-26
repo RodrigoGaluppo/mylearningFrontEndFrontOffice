@@ -102,7 +102,7 @@ import { useAuth } from '../hooks/AuthContext';
                 
               </Heading>
               <Text color={useColorModeValue('gray.500', 'gray.200')} fontSize={{ base: 'sm', sm: 'md' }}>
-                Aprenda matemática do jeito certo !
+                Learn the right way
               </Text>
             </Stack>
             <Box as={'form'} mt={10}>
@@ -137,16 +137,7 @@ import { useAuth } from '../hooks/AuthContext';
                     color: 'gray.500',
                   }}
                 />
-                <Text color={useColorModeValue('', '')} fontSize={{ base: 'md', sm: 'xl' }}>
-                    Ou crie sua conta 
-                    {' '}
-                    <Link to="/signup" ><Text
-                        as={'span'}
-                        bgGradient="linear(to-r, red.400,pink.400)"
-                        bgClip="text">
-                        aqui
-                    </Text></Link>
-                </Text>
+            
               </Stack>
               
               <Button
