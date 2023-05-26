@@ -30,7 +30,7 @@ import {
     FormLabel,
     ModalFooter
   } from '@chakra-ui/react';
-import { Link, redirect, useParams, useSearchParams } from 'react-router-dom';
+import { Link, redirect, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ColorModeSwitcher } from '../components/ColorModeSwitcher';
 import { useToast } from '@chakra-ui/react'
 import Header from '../components/Header';
@@ -40,6 +40,8 @@ import { useAuth } from '../hooks/AuthContext';
 import { FiArrowLeft, FiArrowRight, FiBook, FiSearch } from 'react-icons/fi';
 import api from '../services/apiClient';
 import Loader from '../components/Loader';
+import { FaTrash } from 'react-icons/fa';
+import VerifyPrompt from '../components/VerifyPrompt';
 
 
 
@@ -51,11 +53,13 @@ import Loader from '../components/Loader';
   interface Question{
     title:string;
     content:string;
-    firstName:string,
+    username:string,
     createdAt:string
     comments:Comment[]
-
+    courseId:string
   }
+
+  
 
   // function component of modal to craete a comment
   const ModalCreateComment = ({isOpen,onClose}: {isOpen:boolean, onClose:()=>void})=>{
@@ -144,11 +148,13 @@ import Loader from '../components/Loader';
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const {token} = useAuth()
+    const {token,user} = useAuth()
 
     const [isLoading,setIsLoading] = useState(false)
 
-   
+    const navigate = useNavigate()
+
+    const modalDeleteQuestion = useDisclosure()
 
     useEffect(()=>{
 
@@ -162,9 +168,44 @@ import Loader from '../components/Loader';
       }).catch(err=>{
           console.log(err);
           setIsLoading(false)
+          toast({
+            title: 'Could not load question',
+            description: "",
+            status: 'error',
+            duration: 9000,
+            isClosable: true,
+            position:"top-left"
+          })
       })
 
     },[isOpen])
+
+    const handleDeleteQuestion = ()=>{
+      setIsLoading(true)
+  
+  
+      api.delete("question/"+id,{ headers: { "Authorization": `Bearer ${token}` } })
+      .then((res) => {
+          
+        setIsLoading(false)
+  
+        navigate("/forum/"+question?.courseId)
+      }).catch(err => {
+        
+        setIsLoading(false)
+  
+        toast({
+          title: 'Could not delete question',
+          description: "",
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position:"top-left"
+        })
+      })
+  
+    }
+  
 
     const forumBg = useColorModeValue("gray.200", "gray.800")
 
@@ -182,7 +223,13 @@ import Loader from '../components/Loader';
           py={{ base: 10, sm: 20, lg: 32 }}
          
           >
-          
+
+          <VerifyPrompt
+            isOpen={modalDeleteQuestion.isOpen} onClose={modalDeleteQuestion.onClose} onOpen={modalDeleteQuestion.onOpen}
+            >
+                <Text>If you delete this question it will no longer be available</Text>
+                <Button mt="2" bg={"red.400"} onClick={handleDeleteQuestion} >Proceed</Button>
+          </VerifyPrompt>
           <Stack
             bg={useColorModeValue('gray.100', 'gray.700')}
             rounded={'xl'}
@@ -195,8 +242,8 @@ import Loader from '../components/Loader';
               <Flex justifyContent={"space-between"} w="100%">
 
               <Flex alignItems={"center"}>
-                  <Avatar mr="4" name={question?.firstName}></Avatar>         
-                  <Text fontSize={"medium"}>{question?.firstName}  </Text>
+                  <Avatar mr="4" name={question?.username}></Avatar>         
+                  <Text fontSize={"medium"}>{question?.username}  </Text>
               </Flex>
 
               <Text fontSize={"medium"}> {new Date(String(question?.createdAt)).toLocaleString("pt-PT")}</Text>
@@ -224,22 +271,27 @@ import Loader from '../components/Loader';
                 {question?.comments?.map(comment=>(
 
                     
-                      <ListItem key={comment.content + new Date().toISOString()} bg={forumBg} display="flex" alignItems={"center"} borderRadius={"xl"}  px="4" py="6"  >
+                  <ListItem key={comment.content + new Date().toISOString()} bg={forumBg} display="flex" alignItems={"center"} borderRadius={"xl"}  px="4" py="6"  >
                                     
                       <Avatar mr="4" name={comment.customerUsername}></Avatar>   
 
                       <Box>
                         
                       <Text fontWeight={"bold"} color="pink.400" fontSize={"medium"}>{comment.customerUsername} </Text> 
-                      <Text fontSize={"medium"}>{comment.content} </Text>   
-                        </Box>         
+                        <Text fontSize={"medium"}>{comment.content} </Text>   
+                      </Box>         
                     </ListItem>
                     
 
                 ))}
             </List>
 
-            
+            {
+                    question?.username === user.username && 
+                    <Button onClick={modalDeleteQuestion.onOpen} bg="red.400">
+                      Delete <Box ml="2"><FaTrash /></Box>  
+                    </Button>
+              }
 
             </Stack>
         </Container>

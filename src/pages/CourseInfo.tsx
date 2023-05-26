@@ -22,8 +22,9 @@ import {
 import {  useEffect, useState } from 'react';
 import { FiBook,  FiPlay } from 'react-icons/fi';
 import Header from '../components/Header';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../services/apiAnonymous';
+import apiLogged from '../services/apiClient';
 import { useAuth } from '../hooks/AuthContext';
 import Loader from '../components/Loader';
 import Feature from '../components/Feature';
@@ -71,26 +72,39 @@ export default function CourseInfo() {
   const [accomplishedCount,setAccomplishedCount] = useState(1) // the accomplished lessons count
   const [lessonsCount,setLessonsCount] = useState(1) // the lessons count
 
-  const [lessonsAccomplishedPercentage,setLessonsAccmplishedPercentage] = useState<number>(0)
+  const navigate = useNavigate()
 
   const [isLoading,setIsLoading] = useState(false)
 
   const toast = useToast()
 
-  const handleGetCertificate = ()=>{
+  const handleEnroll = ()=>{
     setIsLoading(true)
 
-    api.post("certificate/", {
-      customercourseId:course?.customerCourseId
+    if(!user){
+      return navigate("/")
+    }
+
+    apiLogged.post("course/", {
+      courseId:id
     },{ headers: { "Authorization": `Bearer ${token}` } })
     .then((res) => {
         
       setIsLoading(false)
 
-      window.open(res.data.url)
+      navigate("/course/"+id)
     }).catch(err => {
       
       setIsLoading(false)
+
+      toast({
+        title: 'Could not enroll to course',
+        description: "",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position:"top-left"
+      })
     })
 
   }
@@ -118,17 +132,21 @@ export default function CourseInfo() {
         setIsLoadingChapter(false)
         setActiveChapterIndex(prevIndex => (prevIndex === index ? null : index));
         
+        toast({
+          title: 'Could not load chapters',
+          description: "",
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position:"top-left"
+        })
+
       })
     }
     
    
   };
 
-  useEffect(()=>{
-
-    setLessonsAccmplishedPercentage(Math.ceil((accomplishedCount / lessonsCount) * 100))
-
-  },[accomplishedCount]) // trigger event every time lessons  accomplished count changes
 
   useEffect(() => {
     setIsLoading(true)
@@ -145,6 +163,14 @@ export default function CourseInfo() {
       }).catch(err => {
         console.log(err);
         setIsLoading(false)
+        toast({
+          title: 'Could not load course info',
+          description: "",
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position:"top-left"
+        })
       })
 
   }, [])
@@ -175,14 +201,20 @@ export default function CourseInfo() {
  
             <Heading>  {course?.name}</Heading>
             <Text color={'gray.500'} fontSize={'lg'}>
-              {course?.description}
+              {course?.description && ""}
             </Text>
 
-            {!!user && <Link to={`/forum/${course?.id}`}>
+            {!!user && 
             
-            <Button maxW="50%" colorScheme='green' >Enroll Me</Button>
+            <Button onClick={handleEnroll} maxW="50%" colorScheme='green' >Enroll Me</Button>
             
-          </Link>}
+            }
+
+            {!user && 
+            
+            <Text>Login to roll yourself and watch lessons</Text>
+            
+            }
 
           </Stack>
           <Flex>
@@ -216,7 +248,7 @@ export default function CourseInfo() {
                   }
 
     
-                  {chapter.title}
+                  {chapter?.title}
 
                   <Collapse in={activeChapterIndex === index}>
                     <List w="100%" my="4" spacing={3} maxH="300px" overflowY={"auto"} >
@@ -240,7 +272,12 @@ export default function CourseInfo() {
 
 
           </List>
+
+     
         </Flex>
+        <Text w="100%" mt="-4" textAlign={"center"}>
+            {course?.chapters?.length == 0 && "There are no Chapters"}
+          </Text>
       </Container>
 
     </>

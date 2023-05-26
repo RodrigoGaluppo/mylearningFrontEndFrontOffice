@@ -41,6 +41,7 @@ import { useAuth } from '../hooks/AuthContext';
 import { FiArrowLeft, FiArrowRight, FiBook, FiSearch } from 'react-icons/fi';
 import Loader from '../components/Loader';
 import api from '../services/apiClient';
+import { FaTrash } from 'react-icons/fa';
 
 
   interface Question{
@@ -48,7 +49,7 @@ import api from '../services/apiClient';
     title:string;
     content:string;
     customer:{
-      firstName:string
+      username:string
     }
   }
 
@@ -67,7 +68,7 @@ import api from '../services/apiClient';
     const {id} = useParams()
     const navigate = useNavigate()    
     const toast = useToast()
-    const {token} = useAuth()
+    const {token,user} = useAuth()
 
     const handleSendQuestion = ()=>{
       setIsLoading(true)
@@ -161,7 +162,7 @@ import api from '../services/apiClient';
 
     const { isOpen, onOpen, onClose } = useDisclosure()
 
-    const {token} = useAuth()
+    const {token,user} = useAuth()
 
     const {id} = useParams()
 
@@ -342,12 +343,16 @@ import api from '../services/apiClient';
                 {questions?.map(question=>(
                  
                     <ListItem bg={forumBg} display="flex" alignItems={"center"} borderRadius={"xl"}  px="4" py="6"  >
-                        <Link style={{width:"100%",height:"100%"}} to={`/question/${question.id}`}>          
-                          <Flex>
-                          <Avatar mr="4" name={question.customer.firstName}></Avatar>         
+                        
+                        <Flex w="100%">
+                          <Link style={{width:"100%",height:"100%", display:"flex"}} to={`/question/${question.id}`}>          
+                          
+                          <Avatar mr="4" name={question.customer.username}></Avatar>         
                           <Text fontSize={"large"}>{question.title}  </Text> 
+                          </Link> 
+                          
                           </Flex>
-                        </Link>          
+                                 
                     </ListItem>
                    
 

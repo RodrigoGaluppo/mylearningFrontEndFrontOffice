@@ -14,7 +14,8 @@ import {  Box,
     Input,
     InputRightElement,
     InputRightAddon,
-    Center, } from "@chakra-ui/react"
+    Center,
+    useDisclosure, } from "@chakra-ui/react"
 import ProductCard from "../components/Card"
 import Header from "../components/Header"
 import { useContext, useEffect, useState } from "react";
@@ -36,17 +37,16 @@ interface IData{
 
 export default function Courses(){
 
-  
-    const  [searchParams, setSearchParams] = useSearchParams()
-
 
     const [courses,setCourses] = useState<IData[]>([])
 
     const toast = useToast()
+    const [isLoading,setIsLoading] = useState(false)
 
     const [maxPage, setMaxPage] = useState(0)
+    const  [searchParams, setSearchParams] = useSearchParams()
 
-    const [isLoading,setIsLoading] = useState(false)
+ 
 
     useEffect(()=>{ 
 
@@ -66,25 +66,6 @@ export default function Courses(){
            })
       }
       },[])
-
-    useEffect(()=>{
-
-       
-        setIsLoading(true) 
-        
-        let search:string = `course/list?page=${searchParams.get("page") || 1}&search=${ searchParams.get("search") || "" }`
-     
-        api.get(search).then((res)=>{
-   
-            setCourses(res?.data?.courses)
-            setMaxPage(res?.data?.count)
-            setIsLoading(false)
-
-        }).catch(err=>{
-            console.log(err);
-            setIsLoading(false)
-        })
-    },[searchParams])
 
     const handleClickNext = ()=>{
 
@@ -151,11 +132,33 @@ export default function Courses(){
         }
     }
 
+    useEffect(()=>{
+
+       
+        setIsLoading(true) 
+        
+        let search:string = `course/list?page=${searchParams.get("page") || 1}&search=${ searchParams.get("search") || "" }`
+     
+        api.get(search).then((res)=>{
+   
+            setCourses(res?.data?.courses)
+            setMaxPage(res?.data?.count)
+            setIsLoading(false)
+
+        }).catch(err=>{
+            console.log(err);
+            setIsLoading(false)
+        })
+    },[searchParams])
+
+   
+
     return(
         <Box>
             <Header  />
             <Loader isLoading={isLoading} />
             <Container maxW={'5xl'}>
+            
             <Stack
                 as={Box}
                 w="100%s"
@@ -191,7 +194,7 @@ export default function Courses(){
                     </InputRightAddon>
                 </InputRightElement>
 
-            </InputGroup>
+                </InputGroup>
                 </Center>
                 <Text fontSize={{ base: 'large', sm: 'large', md: 'xl' }} color={'gray.500'}>
                    here's the list

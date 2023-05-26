@@ -16,17 +16,19 @@ import {
   useToast,
   Progress,
   Box,
-  Button
+  Button,
+  useDisclosure
 } from '@chakra-ui/react';
 
 import {  useEffect, useState } from 'react';
 import { FiBook,  FiPlay } from 'react-icons/fi';
 import Header from '../components/Header';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../services/apiClient';
 import { useAuth } from '../hooks/AuthContext';
 import Loader from '../components/Loader';
 import Feature from '../components/Feature';
+import VerifyPrompt from '../components/VerifyPrompt';
 
 
 interface ICourse {
@@ -75,6 +77,11 @@ export default function Course() {
 
   const [isLoading,setIsLoading] = useState(false)
 
+  const {isOpen, onClose, onOpen} = useDisclosure()
+
+
+  const navigate = useNavigate()
+            
   const toast = useToast()
 
   const handleGetCertificate = ()=>{
@@ -91,6 +98,40 @@ export default function Course() {
     }).catch(err => {
       
       setIsLoading(false)
+      toast({
+        title: 'Could not generate certificate',
+        description: "",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position:"top-left"
+      })
+    })
+
+  }
+
+  const handleDelist = ()=>{
+    setIsLoading(true)
+
+
+    api.delete("course/"+id,{ headers: { "Authorization": `Bearer ${token}` } })
+    .then((res) => {
+        
+      setIsLoading(false)
+
+      navigate("/dashboard")
+    }).catch(err => {
+      
+      setIsLoading(false)
+
+      toast({
+        title: 'Could not delist to course',
+        description: "",
+        status: 'error',
+        duration: 9000,
+        isClosable: true,
+        position:"top-left"
+      })
     })
 
   }
@@ -117,7 +158,14 @@ export default function Course() {
       .catch(()=>{
         setIsLoadingChapter(false)
         setActiveChapterIndex(prevIndex => (prevIndex === index ? null : index));
-        
+        toast({
+          title: 'Could not load chapters',
+          description: "",
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position:"top-left"
+        })
       })
     }
     
@@ -127,6 +175,10 @@ export default function Course() {
   useEffect(()=>{
 
     setLessonsAccmplishedPercentage(Math.ceil((accomplishedCount / lessonsCount) * 100))
+
+    if(!(lessonsAccomplishedPercentage >= 0 && lessonsAccomplishedPercentage <= 100) || isNaN(lessonsAccomplishedPercentage)){
+      setLessonsAccmplishedPercentage(0)
+    }
 
   },[accomplishedCount]) // trigger event every time lessons  accomplished count changes
 
@@ -145,6 +197,14 @@ export default function Course() {
       }).catch(err => {
         console.log(err);
         setIsLoading(false)
+        toast({
+          title: 'Could not load course',
+          description: "",
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+          position:"top-left"
+        })
       })
 
   }, [])
@@ -156,6 +216,12 @@ export default function Course() {
       
       <Header  />
        <Loader isLoading={isLoading} />
+       <VerifyPrompt
+            isOpen={isOpen} onClose={onClose} onOpen={onOpen}
+            >
+                <Text>If you delist your course you may lose data of what you have accomplished with it</Text>
+                <Button mt="2" bg={"red.400"} onClick={handleDelist} >Proceed</Button>
+          </VerifyPrompt>
       <Container maxW={'5xl'} py={10}>
         <Box mb="12">
         <Progress mb="2" colorScheme="green" value={lessonsAccomplishedPercentage}/> 
@@ -164,7 +230,7 @@ export default function Course() {
         {lessonsAccomplishedPercentage === 100 && <Button onClick={handleGetCertificate} mt="4" size="sm" h="12" colorScheme='green' justifySelf={"center"}>Get certificate</Button>}
 
         <Feature  icon={<FiBook/>} iconBg='green.300' text={`${
-          lessonsAccomplishedPercentage
+          lessonsAccomplishedPercentage 
         }%`}></Feature>
 
         </Flex>
@@ -186,15 +252,20 @@ export default function Course() {
             </Text>
 
             
-            
             <Heading>  {course?.name}</Heading>
             <Text color={'gray.500'} fontSize={'lg'}>
               {course?.description}
             </Text>
-            <Link to={`/forum/${course?.id}`}>
-            <Button maxW="50%" colorScheme='pink' >Go to Forum</Button>
+            <Flex w="100%" justifyContent={"space-between"}>
+              <Link to={`/forum/${course?.id}`}>
+              <Button  colorScheme='pink' >Go to Forum</Button>
               
-            </Link>
+              </Link>
+              <Button maxW="50%" onClick={()=>{
+                  onOpen()
+              }} color='red.400' >Delist course</Button>
+            </Flex>
+            
 
           </Stack>
           <Flex>
@@ -208,7 +279,7 @@ export default function Course() {
           </Flex>
         </SimpleGrid>
         <Heading my="10"  >
-          <Center>Modules </Center>
+          <Center>Chapters </Center>
         </Heading>
         <Flex
           w="100%"
@@ -252,7 +323,10 @@ export default function Course() {
 
 
           </List>
+
+         
         </Flex>
+        {course?.chapters?.length == 0 && <Text w="100%" mt="-4" textAlign={"center"}>There are no chapters</Text>}
       </Container>
 
     </>
