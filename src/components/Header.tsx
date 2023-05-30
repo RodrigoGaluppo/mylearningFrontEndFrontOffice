@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { ReactNode, useEffect } from 'react';
 import {
   Box,
   Flex,
@@ -18,6 +18,7 @@ import {
   Container,
   Image,
   Text,
+  useColorMode,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { Link as LinkRoute } from 'react-router-dom';
@@ -29,8 +30,6 @@ interface ILink{
   title:string
   value:string
 }
-
-
 
 const NavLink = ({ children, href="#" }: { children: ReactNode, href:string }) => (
 
@@ -51,8 +50,13 @@ const NavLink = ({ children, href="#" }: { children: ReactNode, href:string }) =
 
 export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { toggleColorMode,setColorMode } = useColorMode()
  
   const {signOut,user} = useAuth()
+
+  useEffect(()=>{
+    setColorMode("dark")
+  },[])
 
   return (
     <>
@@ -94,7 +98,6 @@ export default function Header() {
           </HStack>
           
           <Flex alignItems={'center'}>
-            <ColorModeSwitcher mr="2"></ColorModeSwitcher>
             
             {
 
@@ -113,18 +116,15 @@ export default function Header() {
                 />
               </MenuButton>
               <MenuList>
+              <LinkRoute to="/profile">
                 <MenuItem>
                 <HStack spacing={"2"}>
                     <FiUser/>
-                    <LinkRoute to="/profile">Profile</LinkRoute>
+                   <Text> Profile</Text>
                   </HStack> 
                 </MenuItem>
-                <MenuItem>
-                <HStack spacing={"2"}>
-                    <FiSettings/>
-                    <Text>Settings</Text>
-                  </HStack> 
-                </MenuItem>
+                </LinkRoute>
+                
                 <MenuDivider />
                 <MenuItem
                 onClick={()=>{
@@ -138,8 +138,6 @@ export default function Header() {
               </MenuList>
             </Menu>
           
-
-
             }
           </Flex>
         </Flex>

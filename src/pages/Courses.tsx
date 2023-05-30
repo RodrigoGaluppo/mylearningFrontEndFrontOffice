@@ -46,6 +46,7 @@ export default function Courses(){
     const [maxPage, setMaxPage] = useState(0)
     const  [searchParams, setSearchParams] = useSearchParams()
 
+    let e=""
  
 
     useEffect(()=>{ 
@@ -141,12 +142,14 @@ export default function Courses(){
      
         api.get(search).then((res)=>{
    
+       
             setCourses(res?.data?.courses)
             setMaxPage(res?.data?.count)
             setIsLoading(false)
-
+           
         }).catch(err=>{
             console.log(err);
+            alert(err)
             setIsLoading(false)
         })
     },[searchParams])
@@ -174,6 +177,7 @@ export default function Courses(){
                     <Text  as={'span'} color={'pink.400'}>
                      you need
                     </Text>
+                   
                 </Heading>
                 <Center>
                 <InputGroup maxW="50rem" m="0 auto" size='md'>

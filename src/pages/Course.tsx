@@ -86,6 +86,8 @@ export default function Course() {
 
   const handleGetCertificate = ()=>{
     setIsLoading(true)
+  
+    var windowReference = window;
 
     api.post("certificate/", {
       customercourseId:course?.customerCourseId
@@ -93,8 +95,9 @@ export default function Course() {
     .then((res) => {
         
       setIsLoading(false)
-
-      window.open(res.data.url)
+      windowReference?.location.replace(res.data?.url) 
+ 
+    
     }).catch(err => {
       
       setIsLoading(false)
@@ -209,8 +212,6 @@ export default function Course() {
 
   }, [])
 
-  
-
   return (
     <>
       
@@ -221,7 +222,8 @@ export default function Course() {
             >
                 <Text>If you delist your course you may lose data of what you have accomplished with it</Text>
                 <Button mt="2" bg={"red.400"} onClick={handleDelist} >Proceed</Button>
-          </VerifyPrompt>
+        </VerifyPrompt>
+        
       <Container maxW={'5xl'} py={10}>
         <Box mb="12">
         <Progress mb="2" colorScheme="green" value={lessonsAccomplishedPercentage}/> 

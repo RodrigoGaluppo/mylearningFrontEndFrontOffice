@@ -18,6 +18,7 @@ import Courses from "../pages/Courses";
 import CourseInfo from "../pages/CourseInfo";
 import Forum from "../pages/Forum";
 import Question from "../pages/Question";
+import COnfirmEMail from "../pages/forgotPassword";
 
 
 
@@ -34,6 +35,8 @@ const Router:React.FC = ()=>{
                 <Route element={<Login/>} path="/" />
       
                 <Route element={<Courses/>} path="/courses" ></Route>
+                <Route element={<COnfirmEMail/>} path="/confirmEmail/:customedId" ></Route>
+                <Route element={<COnfirmEMail/>} path="/changePassword/:tokenId" ></Route>
                 <Route element={<CourseInfo/>} path="/courseInfo/:id" ></Route>
                 <Route element={ <PrivateRouteComponent component={DashBoard} />} path="/dashboard" />
                 <Route element={ <PrivateRouteComponent component={Course} />} path="/course/:id" />

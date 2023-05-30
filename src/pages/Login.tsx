@@ -14,7 +14,8 @@ import {
     IconProps,
     Icon,
     useColorModeValue,
-    Image
+    Image,
+    useDisclosure
   } from '@chakra-ui/react';
 import { Link, redirect } from 'react-router-dom';
 import { ColorModeSwitcher } from '../components/ColorModeSwitcher';
@@ -22,6 +23,8 @@ import { useToast } from '@chakra-ui/react'
 import Header from '../components/Header';
 import { useState } from 'react';
 import { useAuth } from '../hooks/AuthContext';
+import ModalForgotPassword from '../components/ModalForgotPassword';
+import Loader from '../components/Loader';
 
   
   export default function JoinsUs() {
@@ -29,12 +32,15 @@ import { useAuth } from '../hooks/AuthContext';
     const [email,setEmail] = useState("")
     const [password, setPassword] = useState("")
     const {signIn} = useAuth()
+    const [isLoading,setIsLoading] = useState(false) 
+
+    const {isOpen,onOpen,onClose} = useDisclosure()
    
     const toast = useToast()
 
     const onHandleSubmit = async ()=>{
       
-      if(email === "" || password === ""){
+      if(email == "" || password == ""){
         toast({
           title: 'Invalid fields',
           description: "email or password can not be empty",
@@ -47,8 +53,10 @@ import { useAuth } from '../hooks/AuthContext';
         return
       }
 
+      setIsLoading(true)
       signIn({email,password})
       .then(res=>{
+        setIsLoading(false)
         toast({
           title: 'success',
           description: "",
@@ -59,10 +67,9 @@ import { useAuth } from '../hooks/AuthContext';
         window.location.replace('/dashboard');
       })
       .catch((err)=>{
-        console.log(err);
-        
+        setIsLoading(false)
         toast({
-          title: 'Invalid fields',
+          title: 'Could not log-in',
           description: err.response.data.message,
           status: 'error',
           duration: 9000,
@@ -77,6 +84,8 @@ import { useAuth } from '../hooks/AuthContext';
     return (
       
       <Box position={'relative'}>
+        <ModalForgotPassword isOpen={isOpen} onClose={onClose} />
+        <Loader isLoading={isLoading} />
       <Header  />
         <Container
           as={SimpleGrid}
@@ -105,13 +114,14 @@ import { useAuth } from '../hooks/AuthContext';
                 Learn the right way
               </Text>
             </Stack>
-            <Box as={'form'} mt={10}>
+            <form onSubmit={onHandleSubmit}>
+   
               <Stack spacing={4}>
               <Text  color={useColorModeValue('gray.500', 'gray.200')} fontSize={{ base: 'sm', sm: 'md' }}>
                 Email:
               </Text>
                 <Input
-                  placeholder="email@exemplo.pt"
+                  placeholder="email@exemple.com"
                   bg={'gray.100'}
                   border={0}
                   type='email'
@@ -140,6 +150,10 @@ import { useAuth } from '../hooks/AuthContext';
             
               </Stack>
               
+              <Box cursor={"pointer"} onClick={onOpen} mt="2" w="100%">
+                <Text color={"pink"} >Forgot Password ?</Text>
+              </Box>
+
               <Button
                 fontFamily={'heading'}
                 mt={8}
@@ -153,8 +167,8 @@ import { useAuth } from '../hooks/AuthContext';
                 }}>
                 Entrar
               </Button>
-            </Box>
-            form
+       
+            </form>
           </Stack>
 
           <Stack  spacing={{ base: 4, md: 10 }}>
