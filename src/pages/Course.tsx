@@ -232,7 +232,7 @@ export default function Course() {
         {lessonsAccomplishedPercentage === 100 && <Button onClick={handleGetCertificate} mt="4" size="sm" h="12" colorScheme='green' justifySelf={"center"}>Get certificate</Button>}
 
         <Feature  icon={<FiBook/>} iconBg='green.300' text={`${
-          lessonsAccomplishedPercentage 
+          isNaN(lessonsAccomplishedPercentage) ? 0 : lessonsAccomplishedPercentage 
         }%`}></Feature>
 
         </Flex>
@@ -265,7 +265,7 @@ export default function Course() {
               </Link>
               <Button maxW="50%" onClick={()=>{
                   onOpen()
-              }} color='red.400' >Delist course</Button>
+              }} color='red.400' >Withdraw course</Button>
             </Flex>
             
 
@@ -274,8 +274,10 @@ export default function Course() {
             <Image
               rounded={'md'}
               alt={'feature image'}
+              fallbackSrc='../img/formulas-dark.svg'
               src={
-                course?.imgUrl}
+                course?.imgUrl
+              }
               objectFit={'cover'}
             />
           </Flex>

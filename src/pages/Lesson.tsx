@@ -203,7 +203,7 @@ export default function Lesson(){
 
                 </SimpleGrid>
                 
-                <SimpleGrid alignItems={"top"} columns={1} spacing="2">
+                <SimpleGrid alignItems={"start"} columns={1} spacing="2">
                      <Text py="0"  fontSize={"3xl"} >Links</Text>
                      {
                             lesson?.resourceLessons && lesson?.resourceLessons.length == 0 &&   <Text textAlign={"justify"} >this lesson does not have links</Text>
@@ -214,7 +214,7 @@ export default function Lesson(){
 
                         <ListItem key={linkL.id}  >
                             <ListIcon as={FiCheckCircle} color='green.500' />
-                            <Link to={linkL.link} >{linkL.title}</Link>
+                            <a href={linkL.link} >{linkL.title}</a>
                         </ListItem>
 
                     ))}
