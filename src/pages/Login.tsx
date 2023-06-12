@@ -173,8 +173,7 @@ import Loader from '../components/Loader';
 
           <Stack  spacing={{ base: 4, md: 10 }}>
             <Image  width={"100%"} maxHeight={"400px"} h={"100%"} src={useColorModeValue('Images/formulas-white.svg', 'Images/formulas-dark.svg')} ></Image>
-            
-            <ColorModeSwitcher></ColorModeSwitcher>
+  
           </Stack>
         </Container>
         <Blur
