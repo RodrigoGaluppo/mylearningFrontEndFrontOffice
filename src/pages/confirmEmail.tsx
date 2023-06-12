@@ -54,7 +54,9 @@ import Loader from '../components/Loader';
         
         setIsLoading(false)
       })
-      .catch(()=>{
+      .catch((e)=>{
+        console.log(e);
+        
         setIsLoading(false)
         setError(true)
       })
