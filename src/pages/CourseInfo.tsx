@@ -220,7 +220,7 @@ export default function CourseInfo() {
           <Flex>
             <Image
               rounded={'md'}
-              fallbackSrc='../img/formulas-dark.svg'
+              fallbackSrc='../Images/formulas-dark.svg'
               alt={'feature image'}
               src={
                 course?.imgUrl}

@@ -274,7 +274,7 @@ export default function Course() {
             <Image
               rounded={'md'}
               alt={'feature image'}
-              fallbackSrc='../img/formulas-dark.svg'
+              fallbackSrc='../Images/formulas-dark.svg'
               src={
                 course?.imgUrl
               }
