@@ -14,7 +14,7 @@ import {
   } from '@chakra-ui/react';
 import { FiCheck, FiCheckCircle } from 'react-icons/fi';
 import Header from '../components/Header';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../hooks/AuthContext';
 import { useEffect, useState } from 'react';
 import api from '../services/apiClient';
@@ -59,6 +59,7 @@ export default function Lesson(){
     const [lesson,setLesson] = useState<ILesson>()
 
     const [isAccomplished, setIsAccomplished] = useState<boolean>()
+    const  [searchParams, setSearchParams] = useSearchParams()
 
     const toast = useToast()
 
@@ -101,7 +102,7 @@ export default function Lesson(){
         setIsLoading(true)
         
         
-            api.get(`lesson/${id}?courseId=${8}`,{ headers: {"Authorization" : `Bearer ${token}`}})
+            api.get(`lesson/${id}?courseId=${searchParams.get("courseId")}`,{ headers: {"Authorization" : `Bearer ${token}`}})
         .then((res)=>{
 
             setLesson(res.data)

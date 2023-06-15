@@ -311,7 +311,7 @@ export default function Course() {
                       {chapterToShow?.lessons.map(lesson=>(
                         <ListItem key={lesson.id} px="4" py="4" bg={lessonItemBg} >
                         <ListIcon as={FiPlay} color='pink.500' />
-                          <Link to={`/lesson/${lesson.id}`}>
+                          <Link to={`/lesson/${lesson.id}?courseId=${id}`}>
                           {lesson.title}
                           </Link>
                         </ListItem>
