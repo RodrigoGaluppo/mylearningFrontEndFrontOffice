@@ -11,7 +11,7 @@ import {
 import { Link } from 'react-router-dom';
   
   const IMAGE =
-    '/img/formulas-white.svg'
+    '/Images/formulas-white.svg'
   export default function CardModule() {
     return (
       <Center py={6}>
