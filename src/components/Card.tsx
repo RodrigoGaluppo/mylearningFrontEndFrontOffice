@@ -60,7 +60,7 @@ import { useAuth } from '../hooks/AuthContext';
   function ProductCard({data, link}:{data:IData, link:string}) {
     const {user} = useAuth()
     return (
-      <Flex  w="300px" p={4} pt="-0.5" alignItems="center" justifyContent="center">
+      <Flex margin={"0 auto"}  w="300px" p={4} pt="-0.5" alignItems="center" justifyContent="center">
         <Box
           bg={useColorModeValue('gray.50', 'gray.800')}
           maxW="sm"
