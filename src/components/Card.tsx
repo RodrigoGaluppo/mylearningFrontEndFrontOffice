@@ -77,6 +77,7 @@ import { useAuth } from '../hooks/AuthContext';
             fallbackSrc='Images/formulas-dark.svg'
             alt={`Picture of ${data.name}`}
             roundedTop="lg"
+            maxW="400px"
           />
   
           <Box p="4">
