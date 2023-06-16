@@ -60,7 +60,7 @@ import { useAuth } from '../hooks/AuthContext';
   function ProductCard({data, link}:{data:IData, link:string}) {
     const {user} = useAuth()
     return (
-      <Flex  p={4} pt="-0.5" w="full" alignItems="center" justifyContent="center">
+      <Flex  maxW="100%" p={4} pt="-0.5" w="full" alignItems="center" justifyContent="center">
         <Box
           bg={useColorModeValue('gray.50', 'gray.800')}
           maxW="sm"
@@ -77,8 +77,6 @@ import { useAuth } from '../hooks/AuthContext';
             fallbackSrc='Images/formulas-dark.svg'
             alt={`Picture of ${data.name}`}
             roundedTop="lg"
-            maxW="300px"
-            objectFit={"contain"}
           />
   
           <Box p="4">
