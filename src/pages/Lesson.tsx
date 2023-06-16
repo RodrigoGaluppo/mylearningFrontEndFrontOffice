@@ -165,6 +165,9 @@ export default function Lesson(){
                             controls
                             width={'100%'}
                             height={'100%'}
+                            muted 
+                            playsInline
+                            draggable
                             
                             style={{height:"500px",maxWidth:"100%",objectFit:"contain"}}
 
