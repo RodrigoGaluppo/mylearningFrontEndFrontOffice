@@ -78,6 +78,7 @@ import { useAuth } from '../hooks/AuthContext';
             alt={`Picture of ${data.name}`}
             roundedTop="lg"
             maxW="300px"
+            objectFit={"contain"}
           />
   
           <Box p="4">
