@@ -70,10 +70,9 @@ export default function Course() {
   const [clickedChapterIndex, setClickedChapterIndex] = useState(-1) // control ehich chapter is clicked
   const [activeChapterIndex, setActiveChapterIndex] = useState<number | null>(null) // control which chapter had been activated
 
-  const [accomplishedCount,setAccomplishedCount] = useState(1) // the accomplished lessons count
-  const [lessonsCount,setLessonsCount] = useState(1) // the lessons count
+  const [accomplishedCount,setAccomplishedCount] = useState(0) // the accomplished lessons count
+  const [lessonsCount,setLessonsCount] = useState(0) // the lessons count
 
-  const [lessonsAccomplishedPercentage,setLessonsAccmplishedPercentage] = useState<number>(0)
 
   const [isLoading,setIsLoading] = useState(false)
 
@@ -175,15 +174,7 @@ export default function Course() {
    
   };
 
-  useEffect(()=>{
-
-    setLessonsAccmplishedPercentage(Math.ceil((accomplishedCount / lessonsCount) * 100))
-
-    if(!(lessonsAccomplishedPercentage >= 0 && lessonsAccomplishedPercentage <= 100) || isNaN(lessonsAccomplishedPercentage)){
-      setLessonsAccmplishedPercentage(0)
-    }
-
-  },[accomplishedCount]) // trigger event every time lessons  accomplished count changes
+  
 
   useEffect(() => {
     setIsLoading(true)
@@ -195,7 +186,9 @@ export default function Course() {
         setIsLoading(false)
 
         setLessonsCount(res.data.lessonsCount)
-        setAccomplishedCount(res.data.accomplishedLessonsCount)        
+     
+        
+        setAccomplishedCount(Math.ceil(res.data.accomplishedLessonsCount * 100))        
         
       }).catch(err => {
         console.log(err);
@@ -212,6 +205,7 @@ export default function Course() {
 
   }, [])
 
+
   return (
     <>
       
@@ -226,13 +220,13 @@ export default function Course() {
         
       <Container maxW={'5xl'} py={10}>
         <Box mb="12">
-        <Progress mb="2" colorScheme="green" value={lessonsAccomplishedPercentage}/> 
+        <Progress mb="2" colorScheme="green" value={accomplishedCount}/> 
         <Flex justifyContent={"space-between"}>
 
-        {lessonsAccomplishedPercentage === 100 && <Button onClick={handleGetCertificate} mt="4" size="sm" h="12" colorScheme='green' justifySelf={"center"}>Get certificate</Button>}
+        {accomplishedCount === 100 && <Button onClick={handleGetCertificate} mt="4" size="sm" h="12" colorScheme='green' justifySelf={"center"}>Get certificate</Button>}
 
         <Feature  icon={<FiBook/>} iconBg='green.300' text={`${
-          isNaN(lessonsAccomplishedPercentage) ? 0 : lessonsAccomplishedPercentage 
+          isNaN(accomplishedCount) ? 0 : accomplishedCount 
         }%`}></Feature>
 
         </Flex>
