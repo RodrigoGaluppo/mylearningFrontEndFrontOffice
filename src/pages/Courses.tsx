@@ -206,12 +206,12 @@ export default function Courses(){
                
                 </Stack>
 
-                <SimpleGrid minChildWidth='400px'  spacing={2}>
+                <SimpleGrid minChildWidth='300px'  spacing={2}>
                    {
                    
                     courses?.map(course=>(
                         
-                        <ProductCard link={"/courseinfo/" + course.id} data={course} />
+                        <ProductCard  link={"/courseinfo/" + course.id} data={course} />
                         
                         
                     ))
